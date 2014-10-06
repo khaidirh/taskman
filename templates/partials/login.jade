@@ -1,0 +1,16 @@
+.login-container
+	h2 login
+	.row.form-group
+		.col-md-12
+			form.login
+				input.form-control(type="text" placeholder="username" ng-model="user.name" autofocus)
+				input.form-control(type="password" placeholder="password" ng-model="user.pass")
+				br
+				.controls
+					button.btn.btn-primary(type="submit" ng-click="login()") let's go
+			form.login(ng-if="loggedIn")
+				p You are already logged in as {{currentUser.firstname}}.
+				button.btn.btn-primary(ng-if="loggedIn" type="submit" ng-click="logout()") log out
+	.row(ng-if="error")
+		.col-md-12
+			p.error {{error}}

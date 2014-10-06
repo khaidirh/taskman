@@ -1,0 +1,118 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+/* line 1, ../sass/partials/_app.scss */
+body, html {
+  font-family: "Open Sans", sans-serif;
+}
+
+/* line 5, ../sass/partials/_app.scss */
+.login-container {
+  text-align: center;
+}
+/* line 8, ../sass/partials/_app.scss */
+.login-container form.login {
+  text-align: center;
+}
+/* line 10, ../sass/partials/_app.scss */
+.login-container form.login input {
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 200px;
+  margin-bottom: 8px;
+}
+
+/* line 21, ../sass/partials/_app.scss */
+.task-container {
+  text-align: center;
+}
+/* line 23, ../sass/partials/_app.scss */
+.task-container table {
+  text-align: left;
+}
+/* line 26, ../sass/partials/_app.scss */
+.task-container h2 {
+  display: inline-block;
+}
+/* line 27, ../sass/partials/_app.scss */
+.task-container button.add-new {
+  display: inline-block;
+  margin-left: 8px;
+  margin-bottom: 8px;
+}
+/* line 32, ../sass/partials/_app.scss */
+.task-container form {
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+}
+/* line 37, ../sass/partials/_app.scss */
+.task-container form.add-new {
+  padding: 16px 32px;
+  border: 1px solid gray;
+  width: 500px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  border-radius: 8px;
+  -webkit-box-shadow: 1px 1px 1px 1px;
+  -moz-box-shadow: 1px 1px 1px 1px;
+  box-shadow: 1px 1px 1px 1px;
+}
+/* line 43, ../sass/partials/_app.scss */
+.task-container form.add-new textarea, .task-container form.add-new select, .task-container form.add-new input {
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 425px;
+  margin-bottom: 6px;
+}
+/* line 50, ../sass/partials/_app.scss */
+.task-container form.add-new textarea {
+  height: 300px;
+}
+/* line 51, ../sass/partials/_app.scss */
+.task-container form.add-new .date {
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 325px;
+}
+/* line 52, ../sass/partials/_app.scss */
+.task-container form.add-new label {
+  text-transform: uppercase;
+}
+/* line 55, ../sass/partials/_app.scss */
+.task-container table {
+  margin-top: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
+  border-radius: 8px;
+  -webkit-box-shadow: 1px 1px 1px 1px;
+  -moz-box-shadow: 1px 1px 1px 1px;
+  box-shadow: 1px 1px 1px 1px;
+}
+/* line 56, ../sass/partials/_app.scss */
+.task-container table thead {
+  text-transform: uppercase;
+}
+
+/* line 63, ../sass/partials/_app.scss */
+header {
+  text-align: right;
+}
+
+/* line 67, ../sass/partials/_app.scss */
+footer {
+  text-align: center;
+}
+/* line 69, ../sass/partials/_app.scss */
+footer img {
+  margin: 8px 0;
+}
