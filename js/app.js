@@ -71,8 +71,6 @@ app.controller("listCtrl", function ($scope, $rootScope, services) {
 		return currentDate.getFullYear() + "-" + (currentDate.getMonth()+1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
 	}
 	$scope.setTask = function() {
-		//$scope.addNew.task.assignedTo = $scope.addNew.task.assignedTo.slice(0, $scope.addNew.task.assignedTo.indexOf(" ("));
-		//$scope.addNew.task.assignedTo = $scope.addNew.task.assignedTo.split();
 		console.log($scope.addNew.task);
 		services.setTask($scope.addNew.task).then(function (data) {
 			console.log(data);
@@ -118,14 +116,17 @@ app.controller("loginCtrl", function ($scope, $rootScope, $location, services, i
 });
 
 app.directive("addUser", function() {
-	return function($scope, $element) {
-		$element.bind("change", function() {
-			var user = this.value;
+	function add(list, user) {
 			if (user.indexOf(" (") != -1) user = user.slice(0, user.indexOf(" ("));
-			var list = $scope.addNew.task.assignedTo["users"];
 			if (list.indexOf(user) === -1) {
 				if (user.indexOf("pick a winner") === -1) list.push(user);
-			} else $scope.addNew.messages["errors"].push(" You've already added " + user + ".");
+			} else return -1
+			return 0;
+	}
+	return function($scope, $element) {
+		$element.bind("change", function() {
+			if (add($scope.addNew.task.assignedTo["users"], this.value) === -1)
+				$scope.addNew.messages["errors"] = " You've already added " + this.value + ".";
 			$scope.$apply();
 		});
 	};
@@ -133,11 +134,56 @@ app.directive("addUser", function() {
 app.directive("removeUser", function() {
 	return function($scope, $element) {
 		$element.bind("click", function() {
+			var user = this.innerText;
 			var list = $scope.addNew.task.assignedTo["users"];
-			var n = list.indexOf(this.value);
-			list.splice(n, 1);
-			$scope.$apply();
+			var n = list.indexOf(user);
+			console.log(list, user, n);
+			if (n != -1) {
+				list.splice(n, 1);
+				$scope.$apply();
+			}
 		});
+	};
+});
+app.directive("toggleDate", function() {
+	return function($scope, $element) {
+		$element.bind("change", function() {
+			function getDateOffset(days) {
+				function getDaysInMonth (month, year) {
+					year = year ? year : new Date().getYear();
+					return new Date(year, month, 0).getDate();
+				}
+				var currentDate = new Date();
+				var currentMonth = currentDate.getMonth()+1;
+				var currentDay = currentDate.getDate();
+				console.log(currentDay);
+				var newDate = currentDate.getFullYear();
+				var daysInMonth = getDaysInMonth(currentMonth);
+				if (currentDay + days > daysInMonth) {
+					var newOffset = daysInMonth - currentDay;
+					console.log(daysInMonth, newOffset);
+					if (currentMonth === 12) newDate += "-01";
+					else newDate += "-" + (currentMonth + 1) + "-" + (0 + (days-newOffset));
+				} else newDate += "-" + currentMonth + "-" + (currentDay + days);
+				console.log(newDate);
+			}
+			var value = this.value;
+			if (value.indexOf("pick a date") === -1) {
+				var currentDate = new Date();
+				var newDate = currentDate.getFullYear();
+				switch (value) {
+					case "Sometime in the future":
+						$scope.addNew.task.dueDate = 0;
+						break;
+					case "A day from now":
+						getDateOffset(1);
+						break;
+				}
+				console.log(value);
+				$scope.addNew.task.dateDue;
+				console.log("ok");
+			}
+		})
 	};
 });
 

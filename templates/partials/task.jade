@@ -9,24 +9,25 @@
 			form(name="addNewTask" method="post").add-new
 				label(for="assignTo") For: 
 				select.form-control(name="assignTo" add-user)
-					option &mdash; pick a winner &mdash;
-					option(ng-repeat="user in users") {{user.admin_firstname}} {{user.admin_lastname}}
+					option &mdash; assign somebody &mdash;
+					option(ng-repeat="user in users") {{user.admin_username}} ({{user.admin_firstname}} {{user.admin_lastname}})
 				p(ng-show="addNew.task.assignedTo")
 					span(ng-repeat="user in addNew.task.assignedTo['users']")
-						a(id="{{user}}" remove-user tooltip="click to remove {{user}}" tooltip-placement="bottom") {{user}}&nbsp;
+						a(href="" remove-user tooltip="click to remove {{user}}" tooltip-placement="bottom") {{user}}
 						//button.btn.btn-default.remove(type="button" value="{{user}}" remove-user) x
-						| &nbsp;
+						| &nbsp;&nbsp;
 				p
 					span(ng-repeat="error in addNew.messages['errors'] track by $index") {{error}}
 				label(for="content") Task:
 				textarea.form-control(name="content" ng-model="addNew.task.content" placeholder="e.g., Make it squishy")
 				label(for="dateDue") By When:
-				select.form-control(name="dateDue" ng-model="addNew.task.dateDue")
+				select.form-control(name="dateDue" toggle-date)
+					option &mdash; pick a date &mdash;
+					option Sometime in the future
 					option A day from now
 					option Two days from now
 					option Three days from now
 					option A week from now
-					option Sometime in the future
 				//label(for="date") Date Due:
 				//datepicker.well.date(name="date" ng-model="addNew.task.dateDue" min-date="minDate" show-weeks="true")
 				.btn-group
