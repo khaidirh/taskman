@@ -156,16 +156,13 @@ app.directive("toggleDate", function() {
 				var currentDate = new Date();
 				var currentMonth = currentDate.getMonth()+1;
 				var currentDay = currentDate.getDate();
-				console.log(currentDay);
 				var newDate = currentDate.getFullYear();
 				var daysInMonth = getDaysInMonth(currentMonth);
 				if (currentDay + days > daysInMonth) {
 					var newOffset = daysInMonth - currentDay;
-					console.log(daysInMonth, newOffset);
 					if (currentMonth === 12) newDate += "-01";
 					else newDate += "-" + (currentMonth + 1) + "-" + (0 + (days-newOffset));
 				} else newDate += "-" + currentMonth + "-" + (currentDay + days);
-				console.log(newDate);
 			}
 			var value = this.value;
 			if (value.indexOf("pick a date") === -1) {
@@ -176,7 +173,7 @@ app.directive("toggleDate", function() {
 						$scope.addNew.task.dueDate = 0;
 						break;
 					case "A day from now":
-						getDateOffset(1);
+						getDateOffset(30);
 						break;
 				}
 				console.log(value);
