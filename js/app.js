@@ -28,7 +28,6 @@ app.factory("services", ["$http", function($http) {
 app.controller("listCtrl", function ($scope, $rootScope, services) {
 	services.getUsers().then(function(data) {
 		$scope.users = data.data;
-		console.log($scope.users);
 	});
 	services.getTasks().then(function(data) {
 		$scope.tasks = data.data;
@@ -38,7 +37,7 @@ app.controller("listCtrl", function ($scope, $rootScope, services) {
 			var task = {
 				id: t.task_id,
 				assignedBy: t.task_assigned_by,
-				assignedTo: t.task_assigned_to,
+				assignedTo: JSON.parse(t.task_assigned_to),
 				content: t.task_content,
 				dateAssigned: t.task_date_assigned,
 				dateDue: t.task_date_due,
@@ -47,18 +46,20 @@ app.controller("listCtrl", function ($scope, $rootScope, services) {
 			};
 			$scope.tasks[i] = task;
 		}
-		console.log($scope.tasks);
 	});
 	$scope.addNew = {
 		isCollapsed: true,
 		task: {
-			assignedTo: [],
+			assignedTo: { "users": [] },
 			assignedBy: $rootScope.currentUser.username,
 			dateAssigned: getTimestamp(),
 			dateDue: "",
 			priorityLevel: 1,
-			type: ["test"],
+			type: { "type": ["test"] },
 			content: ""
+		},
+		messages: {
+			"errors": []
 		}
 	};
 	$scope.today = function() {
@@ -70,12 +71,12 @@ app.controller("listCtrl", function ($scope, $rootScope, services) {
 		return currentDate.getFullYear() + "-" + (currentDate.getMonth()+1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
 	}
 	$scope.setTask = function() {
-		$scope.addNew.task.assignedTo = $scope.addNew.task.assignedTo.slice(0, $scope.addNew.task.assignedTo.indexOf(" ("));
+		//$scope.addNew.task.assignedTo = $scope.addNew.task.assignedTo.slice(0, $scope.addNew.task.assignedTo.indexOf(" ("));
 		//$scope.addNew.task.assignedTo = $scope.addNew.task.assignedTo.split();
 		console.log($scope.addNew.task);
-		//services.setTask($scope.addNew.task).then(function (data) {
-		//	console.log(data);
-		//});
+		services.setTask($scope.addNew.task).then(function (data) {
+			console.log(data);
+		});
 	}
 });
 
@@ -119,10 +120,23 @@ app.controller("loginCtrl", function ($scope, $rootScope, $location, services, i
 app.directive("addUser", function() {
 	return function($scope, $element) {
 		$element.bind("change", function() {
-			if ($scope.addNew.task.assignTo.indexOf(" (") != -1) {
-				$scope.addNew.task.assignTo = $scope.addNew.task.assignTo.slice(0, $scope.addNew.task.assignTo.indexOf("("));
-			}
-			$scope.addNew.task.assignedTo += $scope.addNew.task.assignTo;
+			var user = this.value;
+			if (user.indexOf(" (") != -1) user = user.slice(0, user.indexOf(" ("));
+			var list = $scope.addNew.task.assignedTo["users"];
+			if (list.indexOf(user) === -1) {
+				if (user.indexOf("pick a winner") === -1) list.push(user);
+			} else $scope.addNew.messages["errors"].push(" You've already added " + user + ".");
+			$scope.$apply();
+		});
+	};
+});
+app.directive("removeUser", function() {
+	return function($scope, $element) {
+		$element.bind("click", function() {
+			var list = $scope.addNew.task.assignedTo["users"];
+			var n = list.indexOf(this.value);
+			list.splice(n, 1);
+			$scope.$apply();
 		});
 	};
 });
