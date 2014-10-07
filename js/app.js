@@ -38,20 +38,29 @@ app.controller("listCtrl", function ($scope, $rootScope, services) {
 			var task = {
 				id: t.task_id,
 				assignedBy: t.task_assigned_by,
-				assignedTo: JSON.parse(t.task_assigned_to),
+				assignedTo: t.task_assigned_to,
 				content: t.task_content,
 				dateAssigned: t.task_date_assigned,
 				dateDue: t.task_date_due,
 				priorityLevel: t.task_priority_level,
-				types: JSON.parse(t.task_type)
+				types: t.task_type
 			};
 			$scope.tasks[i] = task;
 		}
 		console.log($scope.tasks);
 	});
-	$scope.addNew = { isCollapsed: true };
-	$scope.assignedTo = "test";
-	$scope.taskContent = "testy";
+	$scope.addNew = {
+		isCollapsed: true,
+		task: {
+			assignedTo: [],
+			assignedBy: $rootScope.currentUser.username,
+			dateAssigned: getTimestamp(),
+			dateDue: "",
+			priorityLevel: 1,
+			type: ["test"],
+			content: ""
+		}
+	};
 	$scope.today = function() {
 		$scope.dateDue = new Date();
 	};
@@ -61,19 +70,12 @@ app.controller("listCtrl", function ($scope, $rootScope, services) {
 		return currentDate.getFullYear() + "-" + (currentDate.getMonth()+1) + "-" + currentDate.getDate() + " " + currentDate.getHours() + ":" + currentDate.getMinutes() + ":" + currentDate.getSeconds();
 	}
 	$scope.setTask = function() {
-		var task = {
-			assignedTo: $scope.assignedTo,
-			assignedBy: $rootScope.currentUser.username,
-			dateAssigned: getTimestamp(),
-			dateDue: $scope.dateDue,
-			priorityLevel: 1,
-			type: "test",
-			content: $scope.taskContent
-		}
-		console.log(task);
-		services.setTask(task).then(function (data) {
-			console.log(data);
-		});
+		$scope.addNew.task.assignedTo = $scope.addNew.task.assignedTo.slice(0, $scope.addNew.task.assignedTo.indexOf(" ("));
+		//$scope.addNew.task.assignedTo = $scope.addNew.task.assignedTo.split();
+		console.log($scope.addNew.task);
+		//services.setTask($scope.addNew.task).then(function (data) {
+		//	console.log(data);
+		//});
 	}
 });
 
@@ -112,6 +114,17 @@ app.controller("loginCtrl", function ($scope, $rootScope, $location, services, i
 		$rootScope.currentUser = ipCookie("user");
 		$rootScope.loggedIn = true;
 	} else $rootScope.loggedIn = false;
+});
+
+app.directive("addUser", function() {
+	return function($scope, $element) {
+		$element.bind("change", function() {
+			if ($scope.addNew.task.assignTo.indexOf(" (") != -1) {
+				$scope.addNew.task.assignTo = $scope.addNew.task.assignTo.slice(0, $scope.addNew.task.assignTo.indexOf("("));
+			}
+			$scope.addNew.task.assignedTo += $scope.addNew.task.assignTo;
+		});
+	};
 });
 
 app.config(["$routeProvider",

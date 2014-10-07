@@ -3,19 +3,19 @@
 		.col-md-12
 			h2 Task Manager
 			button.btn.btn-primary.add-new(ng-click="addNew.isCollapsed = !addNew.isCollapsed") add
-	.row(collapse="!addNew.isCollapsed")
+	.row(collapse="addNew.isCollapsed")
 		.col-md-4
 		.col-md-4
-			form(name="addNew" method="post").add-new
+			form(name="addNewTask" method="post").add-new
 				label(for="assignTo") For: 
-				select.form-control(name="assignTo" ng-model="assignedTo")
+				select.form-control(name="assignTo" ng-model="addNew.task.assignTo" add-user)
 					option(ng-repeat="user in users") {{user.admin_username}} ({{user.admin_firstname}} {{user.admin_lastname}})
 				label(for="content") Task:
-				textarea.form-control(name="content" ng-model="taskContent" placeholder="e.g., Make it squishy")
+				textarea.form-control(name="content" ng-model="addNew.task.content" placeholder="e.g., Make it squishy")
 				label(for="date") Date Due:
-				datepicker.well.date(name="date" ng-model="dateDue" min-date="minDate" show-weeks="true")
+				datepicker.well.date(name="date" ng-model="addNew.task.dateDue" min-date="minDate" show-weeks="true")
 				.btn-group
-					button.btn.btn-primary(ng-submit="setTask()") OK
+					button.btn.btn-primary(ng-click="setTask()") OK
 
 		.col-md-4
 
@@ -34,7 +34,7 @@
 					tr
 						td {{task.content}}
 						td
-							span(ng-repeat="user in task.assignedTo") {{user}}
+							span() {{task.assignedTo}}
 								br
 						td {{task.assignedBy}} on {{task.dateAssigned}}
 						td {{task.dateDue}}
