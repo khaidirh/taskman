@@ -22,12 +22,12 @@
 				textarea.form-control(name="content" ng-model="addNew.task.content" placeholder="e.g., Make it squishy")
 				label(for="dateDue") By When:
 				select.form-control(name="dateDue" toggle-date)
-					option &mdash; pick a date &mdash;
-					option Sometime in the future
-					option A day from now
-					option Two days from now
-					option Three days from now
-					option A week from now
+					option(value="-1") &mdash; pick a date &mdash;
+					option(value="0") Sometime in the future
+					option(value="1") A day from now
+					option(value="2") Two days from now
+					option(value="3") Three days from now
+					option(value="7") A week from now
 				//label(for="date") Date Due:
 				//datepicker.well.date(name="date" ng-model="addNew.task.dateDue" min-date="minDate" show-weeks="true")
 				.btn-group
@@ -45,6 +45,7 @@
 						th For
 						th By
 						th When
+						th Status
 						th
 				tbody(ng-repeat="task in tasks")
 					tr
@@ -54,5 +55,10 @@
 								br
 						td {{task.assignedBy}} on {{task.dateAssigned}}
 						td {{task.dateDue}}
+						td {{task.status || "none"}}
 						td
+							select.form-control(name="markTask" mark-task)
+								option(value="-1") &mdash; mark task as &mdash;
+								option(value="0") doing
+								option(value="1") done
 		.col-md-1

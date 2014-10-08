@@ -42,7 +42,8 @@ app.controller("listCtrl", function ($scope, $rootScope, services) {
 				dateAssigned: t.task_date_assigned,
 				dateDue: t.task_date_due,
 				priorityLevel: t.task_priority_level,
-				types: t.task_type
+				types: t.task_type,
+				status: t.task_status
 			};
 			$scope.tasks[i] = task;
 		}
@@ -163,24 +164,49 @@ app.directive("toggleDate", function() {
 					if (currentMonth === 12) newDate += "-01";
 					else newDate += "-" + (currentMonth + 1) + "-" + (0 + (days-newOffset));
 				} else newDate += "-" + currentMonth + "-" + (currentDay + days);
+				return newDate;
 			}
 			var value = this.value;
-			if (value.indexOf("pick a date") === -1) {
+			if (value != -1) {
 				var currentDate = new Date();
 				var newDate = currentDate.getFullYear();
-				switch (value) {
-					case "Sometime in the future":
-						$scope.addNew.task.dueDate = 0;
-						break;
-					case "A day from now":
-						getDateOffset(30);
-						break;
-				}
-				console.log(value);
-				$scope.addNew.task.dateDue;
+				var dueDate = $scope.addNew.task.dueDate;
+				if (!value) dueDate = value;
+				else dueDate = getDateOffset(parseInt(value)+30);
+				console.log(value, dueDate);
 				console.log("ok");
 			}
 		})
+	};
+});
+
+app.directive("markTask", function() {
+	return function($scope, $element) {
+		var users = $scope.task.assignedTo["users"];
+		var user = $scope.$root.currentUser;
+		if (users.indexOf(user.username) != -1) console.log("This task is for you.");
+		else($element.remove());
+		$element.bind("change", function() {
+			var value = this.value
+			if (value != -1) {
+				switch (value) {
+					case "0":
+						$scope.task.status = "doing";
+						break;
+					case "1":
+						$scope.task.status = "done";
+						break;
+				}
+				$scope.$apply();
+			}
+			console.log($scope.task.status);
+		});
+	};
+});
+
+app.directive("markTaskAs", function() {
+	return function($scope, $element) {
+		console.log($scope);
 	};
 });
 
